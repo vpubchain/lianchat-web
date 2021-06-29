@@ -136,20 +136,20 @@ async function start() {
 
         const loadOlmPromise = loadOlm();
         // set the platform for react sdk
-        preparePlatform();
+        await preparePlatform();
         // load config requires the platform to be ready
         const loadConfigPromise = loadConfig();
         await settled(loadConfigPromise); // wait for it to settle
         // keep initialising so that we can show any possible error with as many features (theme, i18n) as possible
 
         // now that the config is ready, try to persist logs
-        const persistLogsPromise = setupLogStorage();
+        const persistLogsPromise = await setupLogStorage();
 
+        const loadSkinPromise = loadSkin();
         // Load language after loading config.json so that settingsDefaults.language can be applied
         const loadLanguagePromise = loadLanguage();
         // as quickly as we possibly can, set a default theme...
         const loadThemePromise = loadTheme();
-        const loadSkinPromise = loadSkin();
 
         // await things settling so that any errors we have to render have features like i18n running
         await settled(loadSkinPromise, loadThemePromise, loadLanguagePromise);

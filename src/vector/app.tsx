@@ -23,7 +23,6 @@ import React from 'react';
 // this incidentally means we can forget our React imports in JSX files without penalty.
 window.React = React;
 
-import * as sdk from 'matrix-react-sdk';
 import PlatformPeg from 'matrix-react-sdk/src/PlatformPeg';
 import {_td, newTranslatableError} from 'matrix-react-sdk/src/languageHandler';
 import AutoDiscoveryUtils from 'matrix-react-sdk/src/utils/AutoDiscoveryUtils';
@@ -32,6 +31,7 @@ import * as Lifecycle from "matrix-react-sdk/src/Lifecycle";
 import type MatrixChatType from "matrix-react-sdk/src/components/structures/MatrixChat";
 import {MatrixClientPeg} from 'matrix-react-sdk/src/MatrixClientPeg';
 import SdkConfig from "matrix-react-sdk/src/SdkConfig";
+import MatrixChat from "matrix-react-sdk/src/components/structures/MatrixChat";
 
 import {parseQs, parseQsFromFragment} from './url_utils';
 import VectorBasePlatform from "./platform/VectorBasePlatform";
@@ -174,12 +174,11 @@ export async function loadApp(fragParams: {}) {
         return;
     }
 
-    const MatrixChat = sdk.getComponent('structures.MatrixChat');
     return <MatrixChat
         onNewScreen={onNewScreen}
         makeRegistrationUrl={makeRegistrationUrl}
         config={config}
-        realQueryParams={params}
+        realQueryParams={params as Record<string, string>}
         startingFragmentQueryParams={fragParams}
         enableGuest={!config.disable_guests}
         onTokenLoginCompleted={onTokenLoginCompleted}

@@ -18,7 +18,6 @@ limitations under the License.
 
 import PlatformPeg from 'matrix-react-sdk/src/PlatformPeg';
 import WebPlatform from '../../src/vector/platform/WebPlatform';
-import * as sdk from "matrix-react-sdk";
 import * as jssdk from "matrix-js-sdk";
 import "../skin-sdk";
 import "../jest-mocks";
@@ -31,12 +30,10 @@ import {sleep} from "../test-utils";
 import * as test_utils from "../test-utils";
 import MockHttpBackend from "matrix-mock-request";
 import "fake-indexeddb/auto";
-
-
-const MatrixChat = sdk.getComponent('structures.MatrixChat');
-const RoomDirectory = sdk.getComponent('structures.RoomDirectory');
-const RoomPreviewBar = sdk.getComponent('rooms.RoomPreviewBar');
-const RoomView = sdk.getComponent('structures.RoomView');
+import MatrixChat from "matrix-react-sdk/src/components/structures/MatrixChat";
+import RoomView from "matrix-react-sdk/src/components/structures/RoomView";
+import RoomDirectory from "matrix-react-sdk/src/components/structures/RoomDirectory";
+import RoomPreviewBar from "matrix-react-sdk/src/components/views/rooms/RoomPreviewBar";
 
 const HS_URL='http://localhost';
 const IS_URL='http://localhost';

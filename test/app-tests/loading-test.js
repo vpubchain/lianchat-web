@@ -26,7 +26,6 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import MatrixReactTestUtils from 'matrix-react-test-utils';
 import * as jssdk from 'matrix-js-sdk';
-import * as sdk from 'matrix-react-sdk';
 import {MatrixClientPeg} from 'matrix-react-sdk/src/MatrixClientPeg';
 import {Views} from 'matrix-react-sdk/src/components/structures/MatrixChat';
 import dis from 'matrix-react-sdk/src/dispatcher/dispatcher';
@@ -39,6 +38,11 @@ import {sleep} from "../test-utils";
 import "fake-indexeddb/auto";
 import {cleanLocalstorage} from "../test-utils";
 import {IndexedDBCryptoStore} from "matrix-js-sdk/src/crypto/store/indexeddb-crypto-store";
+import MatrixChat from "matrix-react-sdk/src/components/structures/MatrixChat";
+import RoomView from "matrix-react-sdk/src/components/structures/RoomView";
+import Login from "matrix-react-sdk/src/components/structures/auth/Login";
+import EmbeddedPage from "matrix-react-sdk/src/components/structures/EmbeddedPage";
+import Welcome from "matrix-react-sdk/src/components/views/auth/Welcome";
 
 const DEFAULT_HS_URL='http://my_server';
 const DEFAULT_IS_URL='http://my_is';
@@ -122,7 +126,6 @@ describe('loading:', function() {
             };
         }
 
-        const MatrixChat = sdk.getComponent('structures.MatrixChat');
         const fragParts = parseQsFromFragment(windowLocation);
 
         const config = Object.assign({
@@ -266,8 +269,7 @@ describe('loading:', function() {
 
             return awaitLoginComponent(matrixChat).then(() => {
                 // we expect a single <Login> component
-                ReactTestUtils.findRenderedComponentWithType(
-                    matrixChat, sdk.getComponent('structures.auth.Login'));
+                ReactTestUtils.findRenderedComponentWithType(matrixChat, Login);
 
                 // the only outstanding request should be a GET /login
                 // (in particular there should be no /register request for
@@ -287,8 +289,7 @@ describe('loading:', function() {
                 return completeLogin(matrixChat);
             }).then(() => {
                 // once the sync completes, we should have a room view
-                ReactTestUtils.findRenderedComponentWithType(
-                    matrixChat, sdk.getComponent('structures.EmbeddedPage'));
+                ReactTestUtils.findRenderedComponentWithType(matrixChat, EmbeddedPage);
                 expect(windowLocation.hash).toEqual("#/home");
             });
         });
@@ -340,8 +341,7 @@ describe('loading:', function() {
             }).then(() => {
                 // once the sync completes, we should have a home page
                 httpBackend.verifyNoOutstandingExpectation();
-                ReactTestUtils.findRenderedComponentWithType(
-                    matrixChat, sdk.getComponent('structures.EmbeddedPage'));
+                ReactTestUtils.findRenderedComponentWithType(matrixChat, EmbeddedPage);
                 expect(windowLocation.hash).toEqual("#/home");
             });
         });
@@ -381,9 +381,7 @@ describe('loading:', function() {
                 httpBackend.when("GET", "/api/v1").respond(200, {});
 
                 // we expect a single <Login> component
-                ReactTestUtils.findRenderedComponentWithType(
-                    matrixChat, sdk.getComponent('structures.auth.Login'),
-                );
+                ReactTestUtils.findRenderedComponentWithType(matrixChat, Login);
 
                 // the only outstanding request should be a GET /login
                 // (in particular there should be no /register request for
@@ -411,7 +409,7 @@ describe('loading:', function() {
                     // we should see a home page, even though we previously had
                     // a stored mx_last_room_id
                     ReactTestUtils.findRenderedComponentWithType(
-                        matrixChat, sdk.getComponent('structures.EmbeddedPage'));
+                        matrixChat, EmbeddedPage);
                     expect(windowLocation.hash).toEqual("#/home");
                 });
             });
@@ -443,8 +441,7 @@ describe('loading:', function() {
             }).then(() => {
                 // once the sync completes, we should have a welcome page
                 httpBackend.verifyNoOutstandingExpectation();
-                ReactTestUtils.findRenderedComponentWithType(
-                    matrixChat, sdk.getComponent('auth.Welcome'));
+                ReactTestUtils.findRenderedComponentWithType(matrixChat, Welcome);
                 expect(windowLocation.hash).toEqual("#/welcome");
             });
         });
@@ -475,8 +472,7 @@ describe('loading:', function() {
 
                 // once the sync completes, we should have a welcome page
                 httpBackend.verifyNoOutstandingExpectation();
-                ReactTestUtils.findRenderedComponentWithType(
-                    matrixChat, sdk.getComponent('auth.Welcome'));
+                ReactTestUtils.findRenderedComponentWithType(matrixChat, Welcome);
                 expect(windowLocation.hash).toEqual("#/welcome");
                 expect(MatrixClientPeg.get().baseUrl).toEqual(DEFAULT_HS_URL);
                 expect(MatrixClientPeg.get().idBaseUrl).toEqual(DEFAULT_IS_URL);
@@ -533,7 +529,7 @@ describe('loading:', function() {
                 }).then(() => {
                     // once the sync completes, we should have a home page
                     ReactTestUtils.findRenderedComponentWithType(
-                        matrixChat, sdk.getComponent('structures.EmbeddedPage'));
+                        matrixChat, EmbeddedPage);
 
                     // we simulate a click on the 'login' button by firing off
                     // the relevant dispatch.
@@ -554,17 +550,13 @@ describe('loading:', function() {
                 expect(windowLocation.hash).toEqual("#/login");
 
                 // we expect a single <Login> component
-                ReactTestUtils.findRenderedComponentWithType(
-                    matrixChat, sdk.getComponent('structures.auth.Login'),
-                );
+                ReactTestUtils.findRenderedComponentWithType(matrixChat, Login);
             });
 
             /*
             // ILAG renders this obsolete. I think.
             it('should allow us to return to the app', function() {
-                const login = ReactTestUtils.findRenderedComponentWithType(
-                    matrixChat, sdk.getComponent('structures.auth.Login')
-                );
+                const login = ReactTestUtils.findRenderedComponentWithType(matrixChat, Login);
 
                 const linkText = 'Return to app';
 
@@ -580,7 +572,7 @@ describe('loading:', function() {
                 return sleep(1).then(() => {
                     // we should be straight back into the home page
                     ReactTestUtils.findRenderedComponentWithType(
-                        matrixChat, sdk.getComponent('structures.EmbeddedPage'));
+                        matrixChat, EmbeddedPage);
                 });
             });
             */
@@ -632,8 +624,7 @@ describe('loading:', function() {
     // and await the HTTP requests.
     async function completeLogin(matrixChat) {
         // we expect a single <Login> component
-        const login = ReactTestUtils.findRenderedComponentWithType(
-            matrixChat, sdk.getComponent('structures.auth.Login'));
+        const login = ReactTestUtils.findRenderedComponentWithType(matrixChat, Login);
 
         // When we switch to the login component, it'll hit the login endpoint
         // for proof of life and to get flows. We'll only give it one option.
@@ -720,26 +711,20 @@ function awaitRoomView(matrixChat, retryLimit, retryCount) {
     console.log(Date.now() + " Awaiting room view: now ready.");
 
     // state looks good, check the rendered output
-    ReactTestUtils.findRenderedComponentWithType(
-        matrixChat, sdk.getComponent('structures.RoomView'));
+    ReactTestUtils.findRenderedComponentWithType(matrixChat, RoomView);
     return Promise.resolve();
 }
 
 function awaitLoginComponent(matrixChat, attempts) {
-    return MatrixReactTestUtils.waitForRenderedComponentWithType(
-        matrixChat, sdk.getComponent('structures.auth.Login'), attempts,
-    );
+    return MatrixReactTestUtils.waitForRenderedComponentWithType(matrixChat, Login, attempts,);
 }
 
 function awaitWelcomeComponent(matrixChat, attempts) {
-    return MatrixReactTestUtils.waitForRenderedComponentWithType(
-        matrixChat, sdk.getComponent('auth.Welcome'), attempts,
-    );
+    return MatrixReactTestUtils.waitForRenderedComponentWithType(matrixChat, Welcome, attempts);
 }
 
 function moveFromWelcomeToLogin(matrixChat) {
-    ReactTestUtils.findRenderedComponentWithType(
-        matrixChat, sdk.getComponent('auth.Welcome'));
+    ReactTestUtils.findRenderedComponentWithType(matrixChat, Welcome);
     dis.dispatch({ action: 'start_login' });
     return awaitLoginComponent(matrixChat);
 }

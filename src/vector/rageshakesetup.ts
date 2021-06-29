@@ -30,27 +30,6 @@ import * as rageshake from "matrix-react-sdk/src/rageshake/rageshake";
 import SdkConfig from "matrix-react-sdk/src/SdkConfig";
 import sendBugReport from "matrix-react-sdk/src/rageshake/submit-rageshake";
 
-export function initRageshake() {
-    // we manually check persistence for rageshakes ourselves
-    const prom = rageshake.init(/*setUpPersistence=*/false);
-    prom.then(() => {
-        console.log("Initialised rageshake.");
-        console.log("To fix line numbers in Chrome: " +
-            "Meatball menu → Settings → Ignore list → Add /rageshake\\.js$");
-
-        window.addEventListener('beforeunload', (e) => {
-            console.log('element-web closing');
-            // try to flush the logs to indexeddb
-            rageshake.flush();
-        });
-
-        rageshake.cleanup();
-    }, (err) => {
-        console.error("Failed to initialise rageshake: " + err);
-    });
-    return prom;
-}
-
 export function initRageshakeStore() {
     return rageshake.tryInitStorage();
 }

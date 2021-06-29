@@ -24,34 +24,59 @@ import Olm from '@matrix-org/olm';
 import * as ReactDOM from "react-dom";
 import * as React from "react";
 
-import * as languageHandler from "matrix-react-sdk/src/languageHandler";
-import SettingsStore from "matrix-react-sdk/src/settings/SettingsStore";
-import ElectronPlatform from "./platform/ElectronPlatform";
-import PWAPlatform from "./platform/PWAPlatform";
-import WebPlatform from "./platform/WebPlatform";
 import PlatformPeg from "matrix-react-sdk/src/PlatformPeg";
 import SdkConfig from "matrix-react-sdk/src/SdkConfig";
-import {setTheme} from "matrix-react-sdk/src/theme";
 
-import {initRageshake, initRageshakeStore} from "./rageshakesetup";
+import * as rageshake from "matrix-react-sdk/src/rageshake/rageshake";
+
+function initRageshake() {
+    // we manually check persistence for rageshakes ourselves
+    const prom = rageshake.init(/*setUpPersistence=*/false);
+    prom.then(() => {
+        console.log("Initialised rageshake.");
+        console.log("To fix line numbers in Chrome: " +
+            "Meatball menu → Settings → Ignore list → Add /rageshake\\.js$");
+
+        window.addEventListener('beforeunload', (e) => {
+            console.log('element-web closing');
+            // try to flush the logs to indexeddb
+            rageshake.flush();
+        });
+
+        rageshake.cleanup();
+    }, (err) => {
+        console.error("Failed to initialise rageshake: " + err);
+    });
+    return prom;
+}
 
 
 export const rageshakePromise = initRageshake();
 
-export function preparePlatform() {
+export async function preparePlatform() {
+    let platformPromise;
+
     if (window.electron) {
         console.log("Using Electron platform");
-        PlatformPeg.set(new ElectronPlatform());
+        platformPromise = import("./platform/ElectronPlatform");
     } else if (window.matchMedia('(display-mode: standalone)').matches) {
         console.log("Using PWA platform");
-        PlatformPeg.set(new PWAPlatform());
+        platformPromise = import("./platform/PWAPlatform");
     } else {
         console.log("Using Web platform");
-        PlatformPeg.set(new WebPlatform());
+        platformPromise = import("./platform/WebPlatform");
     }
+
+    PlatformPeg.set(new (await platformPromise));
 }
 
-export function setupLogStorage() {
+export async function setupLogStorage() {
+
+    const { initRageshakeStore } = await import(
+        /* webpackChunkName: "rageshakesetup" */
+        /* webpackPreload: true */
+        "./rageshakesetup");
+
     if (SdkConfig.get().bug_report_endpoint_url) {
         return initRageshakeStore();
     }
@@ -105,8 +130,19 @@ export function loadOlm(): Promise<void> {
 }
 
 export async function loadLanguage() {
+    const SettingsStore = (await import(
+        /* webpackChunkName: "matrix-react-sdk:SettingsStore" */
+        /* webpackPreload: true */
+        "matrix-react-sdk/src/settings/SettingsStore")).default;
+
     const prefLang = SettingsStore.getValue("language", null, /*excludeDefault=*/true);
     let langs = [];
+
+    const languageHandler = await import(
+        /* webpackChunkName: "matrix-react-sdk:languageHandler" */
+        /* webpackPreload: true */
+        "matrix-react-sdk/src/languageHandler");
+    _t = languageHandler._t;
 
     if (!prefLang) {
         languageHandler.getLanguagesFromBrowser().forEach((l) => {
@@ -145,7 +181,11 @@ export async function loadSkin() {
 }
 
 export async function loadTheme() {
-    setTheme();
+    const { setTheme } = await import(
+        /* webpackChunkName: "matrix-react-sdk:theme" */
+        /* webpackPreload: true */
+        "matrix-react-sdk/src/theme");
+    await setTheme();
 }
 
 export async function loadApp(fragParams: {}) {
@@ -174,4 +214,4 @@ export async function showIncompatibleBrowser(onAccept) {
         document.getElementById('matrixchat'));
 }
 
-export const _t = languageHandler._t;
+export let _t = s => s;
