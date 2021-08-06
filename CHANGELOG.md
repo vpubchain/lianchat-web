@@ -111,7 +111,7 @@ Changes in [1.7.34](https://github.com/vector-im/element-desktop/releases/tag/v1
  * Fix bug where the 'other homeserver' field in the server selection dialog would become briefly focus and then unfocus when clicked.
    [\#6394](https://github.com/matrix-org/matrix-react-sdk/pull/6394)
    Fixes #18031
- * Standardise spelling and casing of homeserver, identity server, and integration manager 
+ * Standardise spelling and casing of homeserver, identity server, and integration manager
    [\#6365](https://github.com/matrix-org/matrix-react-sdk/pull/6365)
  * Fix widgets not receiving decrypted events when they have permission.
    [\#6371](https://github.com/matrix-org/matrix-react-sdk/pull/6371)
@@ -1956,7 +1956,7 @@ Changes in [1.4.1](https://github.com/vector-im/riot-web/releases/tag/v1.4.1) (2
 ==========================================================================================
 [Full Changelog](https://github.com/vector-im/riot-web/compare/v1.4.0...v1.4.1)
 
- * Upgrade to React SDK 1.6.1 to fix critical 
+ * Upgrade to React SDK 1.6.1 to fix critical
    [blank screen issue](https://github.com/vector-im/riot-web/issues/10983)
  * Upgrade to JS SDK 2.4.1 to to ignore crypto events with empty content
  * Update from Weblate
@@ -3773,7 +3773,7 @@ Changes in [0.12.0-rc.1](https://github.com/vector-im/riot-web/releases/tag/v0.1
    [\#4639](https://github.com/vector-im/riot-web/pull/4639)
  * Use `catch` instead of `fail` to handle room tag error
    [\#4643](https://github.com/vector-im/riot-web/pull/4643)
- * CSS for decorated matrix.to links in the composer
+ * CSS for decorated im.to.vpubchain.net links in the composer
    [\#4583](https://github.com/vector-im/riot-web/pull/4583)
  * Deflake the joining test
    [\#4579](https://github.com/vector-im/riot-web/pull/4579)
@@ -4011,7 +4011,7 @@ Changes in [0.11.0-rc.1](https://github.com/vector-im/riot-web/releases/tag/v0.1
    [\#4186](https://github.com/vector-im/riot-web/pull/4186)
  * Fix DeprecationWarning
    [\#4184](https://github.com/vector-im/riot-web/pull/4184)
- * room link should be a matrix.to one
+ * room link should be a im.to.vpubchain.net one
    [\#4178](https://github.com/vector-im/riot-web/pull/4178)
  * Update home.html
    [\#4163](https://github.com/vector-im/riot-web/pull/4163)
@@ -4889,7 +4889,7 @@ Changes in [0.7.5](https://github.com/vector-im/vector-web/releases/tag/v0.7.5) 
 
  * re-add leave button in RoomSettings
  * add /user URLs
- * recognise matrix.to links and other vector links
+ * recognise im.to.vpubchain.net links and other vector links
  * fix linkify dependency
  * fix avatar clicking in MemberInfo
  * fix RoomTagContextMenu so it works on historical rooms

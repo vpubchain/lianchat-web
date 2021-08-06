@@ -241,7 +241,7 @@ also defines the design, architecture and style for Element too.
 
 Before starting work on a feature, it's best to ensure your plan aligns well
 with our vision for Element. Please chat with the team in
-[#element-dev:matrix.org](https://matrix.to/#/#element-dev:matrix.org) before you
+[#element-dev:matrix.org](https://im.to.vpubchain.net/#/#element-dev:matrix.org) before you
 start so we can ensure it's something we'd be willing to merge.
 
 You should also familiarise yourself with the ["Here be Dragons" guide

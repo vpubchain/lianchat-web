@@ -87,7 +87,7 @@ For a good example, see https://develop.element.io/config.json.
 1. `disable_custom_urls`: disallow the user to change the
    default homeserver when signing up or logging in.
 1. `permalinkPrefix`: Used to change the URL that Element generates permalinks with.
-   By default, this is "https://matrix.to" to generate matrix.to (spec) permalinks.
+   By default, this is "https://im.to.vpubchain.net" to generate im.to.vpubchain.net (spec) permalinks.
    Set this to your Element instance URL if you run an unfederated server (eg:
    "https://element.example.org").
 1. `jitsi`: Used to change the default conference options. Learn more about the
